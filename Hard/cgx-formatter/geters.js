@@ -9,28 +9,41 @@ function get_index_parenthese(string, index)
        up += string[i] == '(' ? 1 : (string[i] == ')' ? -1 : 0)
   return (-1);
 }
+
 function split_block(string)
 {
-  let first = string.split(";");
-  let clean = [];
-  first.forEach((x, y, t)=>{
-    if (x[0] == '(')
-      clean.push(x + ";" + t[y + 1]);
-    else if (x[x.length - 1 ] != ')')
-      clean.push(x);
+  let first = string.split(";").filter(x => x.length)
+  let shrink = []
+  let im = 0, k = -1
+  first.forEach((x, i) => {
+    let n = (x.match(/^\(+/) || [""])[0].length
+    if(n){
+      if(!im) k = i
+      im += n
+    }
+    let j = (x.match(/\)+$/) || [""])[0].length
+    if(im && j){
+      if(!(im -= j)){
+        let z = first.slice(k, i + 1).join(";").substr(1)
+        return shrink.push(split_block(z.substr(0, z.length - 1)))
+      }
+    }
+    if(!im){
+      shrink.push(x)
+    }
   })
-  return clean;
+  return shrink;
 }
+
 function get_element(string)
 {
   let obj = {};
- if (string[0] == "'"){
+  if (typeof(string) == 'object'){
+   obj.value = string.map(x=>get_element(x));
+   obj.type = "block";
+ } else if (string[0] == "'"){
     obj.value = String(string.substr(1, string.length - 2));
     obj.type = "string";
-  } else if (string[0] == '('){
-    console.log(String(string.substr(1, string.length - 2)));
-   obj.value = extract_block(String(string.substr(1, string.length - 2)));
-   obj.type = "block";
   } else if (string[0] == 'n'){
     obj.value = null;
     obj.type = "null";
