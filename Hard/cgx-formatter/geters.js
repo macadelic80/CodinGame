@@ -12,18 +12,11 @@ function get_index_parenthese(string, index)
 function split_block(string)
 {
   let first = string.split(";");
-  let up = 0;
   let clean = [];
-  for (let i = 0; i < first.length)
   first.forEach((x, y, t)=>{
     if (x[0] == '(')
-    {
-      up++;
-      clean.push(x + ";" t[y + 1]);
-    }
-    else if (x[x.length - 1 ] == ')')
-      up--;
-    else
+      clean.push(x + ";" + t[y + 1]);
+    else if (x[x.length - 1 ] != ')')
       clean.push(x);
   })
   return clean;
