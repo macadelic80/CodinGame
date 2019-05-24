@@ -41,7 +41,11 @@ function get_element(string)
   if (typeof(string) == 'object'){
    obj.value = string.map(x=>get_element(x));
    obj.type = "block";
- } else if (string[0] == "'"){
+ } else if (~string.indexOf('=')){
+    obj.value = get_element(string.substr(string.indexOf('=') + 1));
+    obj.type = "variable";
+    obj.name = string.substr(0, string.indexOf('=') - 1);
+  } else if (string[0] == "'"){
     obj.value = String(string.substr(1, string.length - 2));
     obj.type = "string";
   } else if (string[0] == 'n'){
