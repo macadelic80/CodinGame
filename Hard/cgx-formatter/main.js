@@ -20,7 +20,12 @@
 )
 */
 let block = [];
-let extract_block = (s) => (s.split(';').map(x=>get_element(x)))
+let extract_block = (s) => {
+  let split = split_block(s);
+  return split.map(x=>{
+      return get_element(x)
+    })
+}
 function colorize_index(string, tab, color)
 {
   let array = [];
